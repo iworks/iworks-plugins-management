@@ -27,11 +27,10 @@ class iworks_wordpress_plugin_posttypes {
 	protected $posttype_objects = array();
 
 	public function __construct() {
-		$base = preg_replace( '/iworks.+/', '', __FILE__ );
 		/**
 		 * load post types
 		 */
-		$posttypes_classes_dir = $base . 'iworks/posttypes/';
+		$posttypes_classes_dir = __DIR__ . '/posttypes/';
 		foreach ( glob( $posttypes_classes_dir . 'class*.php' ) as $filename_with_path ) {
 			$filename = basename( $filename_with_path );
 			if ( ! preg_match( '/^class-iworks-plugins-management-posttype-([a-z]+).php$/', $filename, $matches ) ) {

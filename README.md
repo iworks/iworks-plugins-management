@@ -1,6 +1,5 @@
-# WordPress Plugin Stub
+# iWorks Plugins Management
 
 ## How to use?
 
-1. get this repo: `git clone git@github.com:iworks/wordpress-plugin-stub.git`
-2. run `./assets/bin/wp-plugin-create.sh`
+[Get relase](https://github.com/iworks/iworks-plugins-management/releases/), install & activate.

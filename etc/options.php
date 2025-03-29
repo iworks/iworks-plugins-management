@@ -20,20 +20,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 defined( 'ABSPATH' ) || exit;
 
 function iworks_iworks_plugins_management_options() {
-	$options = array();
-	//$parent = SET SOME PAGE;
-	/**
-	 * main settings
-	 */
-	$options['index'] = array(
-		'version'    => '0.0',
-		'page_title' => __( 'Configuration', 'iworks-plugins-management' ),
-		'menu'       => 'options',
-		// 'parent' => $parent,
-		'options'    => array(),
-		'metaboxes'  => array(),
-		'pages'      => array(),
-	);
-	return $options;
+	return array();
 }
 

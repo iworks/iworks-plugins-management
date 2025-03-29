@@ -1,4 +1,4 @@
-=== iWorks Plugins Management ===
+=== Plugins Management ===
 Contributors: iworks
 Donate link: https://ko-fi.com/iworks?utm_source=iworks-plugins-management&utm_medium=readme-donate
 Tags: PLUGIN_TAGS

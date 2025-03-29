@@ -589,5 +589,18 @@ abstract class iworks_iworks_plugins_management_posttype_base extends iworks_iwo
 			)
 		);
 	}
+
+	/**
+	 * get filter name for feature in register_post_type() function.
+	 *
+	 * @since 1.0.0
+	 */
+	protected function get_register_post_filter_name( $feature ) {
+		return sprintf(
+			'iworks/iworks-plugins-management/register-post-type/%s/%s',
+			$this->posttypes_names[ $this->posttype_name ],
+			$feature
+		);
+	}
 }
 

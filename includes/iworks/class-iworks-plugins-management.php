@@ -36,6 +36,14 @@ class iworks_iworks_plugins_management extends iworks_iworks_plugins_management_
 	 */
 	private array $objects = array();
 
+
+	/**
+	 * plugins page
+	 *
+	 * @since 1.0.0
+	 */
+	private string $meta_name_plugins_page_id = 'iwpm_plugins_page_id';
+
 	public function __construct() {
 		parent::__construct();
 		$this->version    = 'PLUGIN_VERSION';
@@ -50,6 +58,7 @@ class iworks_iworks_plugins_management extends iworks_iworks_plugins_management_
 		 */
 		add_action( 'admin_init', array( $this, 'action_admin_init' ) );
 		add_action( 'init', array( $this, 'action_init_settings' ) );
+		add_action( 'admin_init', array( $this, 'action_admin_init_add_settings_fields' ) );
 		/**
 		 * load github class
 		 */
@@ -123,7 +132,7 @@ class iworks_iworks_plugins_management extends iworks_iworks_plugins_management_
 		if ( '' == $this->dev ) {
 			$files = array(
 				'iworks-plugins-management-admin-datepicker' => 'assets/scripts/admin/src/datepicker.js',
-				'iworks-plugins-management-admin-select2'    => 'assets/scripts/admin/src/select2.js',
+				'iworks-plugins-management-admin-select2' => 'assets/scripts/admin/src/select2.js',
 				'iworks-plugins-management-admin-media-library' => 'assets/scripts/admin/src/media-library.js',
 			);
 		}
@@ -180,20 +189,6 @@ class iworks_iworks_plugins_management extends iworks_iworks_plugins_management_
 	 */
 	public function plugin_row_meta( $links, $file ) {
 		if ( $this->dir . '/iworks-plugins-management.php' == $file ) {
-			if ( ! is_multisite() && current_user_can( $this->capability ) ) {
-				$links[] = sprintf(
-					'<a href="%s">%s</a>',
-					esc_url(
-						add_query_arg(
-							array(
-								'page' => $this->dir . '/admin/index.php',
-							),
-							admin_url( 'admin.php' )
-						)
-					),
-					esc_html__( 'Settings', 'iworks-plugins-management' )
-				);
-			}
 			/* start:free */
 			$links[] = sprintf(
 				'<a href="%s">%s</a>',
@@ -232,7 +227,6 @@ class iworks_iworks_plugins_management extends iworks_iworks_plugins_management_
 	 * @since 1.0.0
 	 */
 	public function register_activation_hook() {
-		$this->db_install();
 		$this->check_option_object();
 		$this->options->activate();
 		do_action( 'iworks/iworks-plugins-management/register_activation_hook' );
@@ -250,10 +244,37 @@ class iworks_iworks_plugins_management extends iworks_iworks_plugins_management_
 	}
 
 	/**
-	 * db install (if needed)
+	 * add settings
 	 *
 	 * @since 1.0.0
 	 */
-	private function db_install() {
+	public function action_admin_init_add_settings_fields() {
+		add_settings_field(
+			$this->meta_name_plugins_page_id,
+			__( 'Plugins', 'iworks-plugins-management' ),
+			array( $this, 'add_settings_meta_name_plugins_page_id' ),
+			'reading',
+			'default',
+			array(
+				'class' => 'opi-feng-plugins',
+			),
+		);
+		register_setting( 'reading', $this->meta_name_plugins_page_id );
 	}
+
+	/**
+	 * field content: plugins
+	 *
+	 * @since 1.0.0
+	 */
+	public function add_settings_meta_name_plugins_page_id( $args ) {
+		wp_dropdown_pages(
+			array(
+				'show_option_none' => __( '&mdash; Select &mdash;', 'iworks-plugins-management' ),
+				'selected'         => get_option( $this->meta_name_plugins_page_id ),
+				'name'             => $this->meta_name_plugins_page_id,
+			)
+		);
+	}
+
 }

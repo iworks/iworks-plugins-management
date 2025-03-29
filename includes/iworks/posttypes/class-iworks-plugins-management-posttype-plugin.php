@@ -64,8 +64,8 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 	public function action_init_settings() {
 		$this->load_plugin_admin_assets                                     = true;
 		$this->meta_boxes[ $this->posttypes_names[ $this->posttype_name ] ] = array(
-			'plugin-data'  => array(
-				'title'  => __( 'plugin Data', 'iworks-plugins-management' ),
+			'Plugin-data'  => array(
+				'title'  => __( 'Plugin Data', 'iworks-plugins-management' ),
 				'fields' => array(
 					array(
 						'name'  => 'icon',
@@ -84,8 +84,8 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 					),
 				),
 			),
-			'plugin-media' => array(
-				'title'  => __( 'plugin Media', 'iworks-plugins-management' ),
+			'Plugin-media' => array(
+				'title'  => __( 'Plugin Media', 'iworks-plugins-management' ),
 				'fields' => array(
 					array(
 						'name'  => 'icon',
@@ -210,12 +210,12 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 	 */
 	public function action_init_register_post_type() {
 		$labels = array(
-			'name'                  => _x( 'plugins', 'Post Type General Name', 'iworks-plugins-management' ),
-			'singular_name'         => _x( 'plugin', 'Post Type Singular Name', 'iworks-plugins-management' ),
-			'menu_name'             => __( 'plugins', 'iworks-plugins-management' ),
-			'name_admin_bar'        => __( 'plugins', 'iworks-plugins-management' ),
-			'archives'              => __( 'plugins', 'iworks-plugins-management' ),
-			'all_items'             => __( 'plugins', 'iworks-plugins-management' ),
+			'name'                  => _x( 'Plugins', 'Post Type General Name', 'iworks-plugins-management' ),
+			'singular_name'         => _x( 'Plugin', 'Post Type Singular Name', 'iworks-plugins-management' ),
+			'menu_name'             => __( 'Plugins', 'iworks-plugins-management' ),
+			'name_admin_bar'        => __( 'Plugins', 'iworks-plugins-management' ),
+			'archives'              => __( 'Plugins', 'iworks-plugins-management' ),
+			'all_items'             => __( 'Plugins', 'iworks-plugins-management' ),
 			'add_new_item'          => __( 'Add New plugin', 'iworks-plugins-management' ),
 			'add_new'               => __( 'Add New', 'iworks-plugins-management' ),
 			'new_item'              => __( 'New plugin', 'iworks-plugins-management' ),
@@ -226,28 +226,28 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 			'search_items'          => __( 'Search plugin', 'iworks-plugins-management' ),
 			'not_found'             => __( 'Not found', 'iworks-plugins-management' ),
 			'not_found_in_trash'    => __( 'Not found in Trash', 'iworks-plugins-management' ),
-			'items_list'            => __( 'plugin list', 'iworks-plugins-management' ),
-			'items_list_navigation' => __( 'plugin list navigation', 'iworks-plugins-management' ),
+			'items_list'            => __( 'Plugin list', 'iworks-plugins-management' ),
+			'items_list_navigation' => __( 'Plugin list navigation', 'iworks-plugins-management' ),
 			'filter_items_list'     => __( 'Filter items list', 'iworks-plugins-management' ),
 		);
 		$args   = array(
 			'can_export'          => true,
 			'capability_type'     => 'page',
-			'description'         => __( 'plugin', 'iworks-plugins-management' ),
+			'description'         => __( 'Plugin', 'iworks-plugins-management' ),
 			'exclude_from_search' => true,
 			'has_archive'         => true,
 			'hierarchical'        => false,
-			'label'               => __( 'plugins', 'iworks-plugins-management' ),
+			'label'               => __( 'Plugins', 'iworks-plugins-management' ),
 			'labels'              => $labels,
 			'public'              => true,
 			'show_in_admin_bar'   => true,
-			'show_in_menu'        => apply_filters( 'opi_post_type_show_in_menu' . $this->posttypes_names[ $this->posttype_name ], 'edit.php' ),
+			'show_in_menu'        => apply_filters( $this->get_register_post_filter_name( 'show_in_menu' ), 'edit.php' ),
 			'show_in_nav_menus'   => true,
 			'show_ui'             => true,
 			'show_in_rest'        => true,
 			'supports'            => array( 'title', 'editor', 'excerpt', 'thumbnail' ),
 			'rewrite'             => array(
-				'slug' => _x( 'plugin', 'slug for single plugin', 'iworks-plugins-management' ),
+				'slug' => _x( 'Plugin', 'slug for single plugin', 'iworks-plugins-management' ),
 			),
 		);
 		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
@@ -329,12 +329,12 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 
 	private function set_fields() {
 		$this->fields = array(
-			'_plugin_date_start'     => array(
-				'label' => __( 'plugin start date', 'iworks-plugins-management' ),
+			'_plugin_date_start'      => array(
+				'label' => __( 'Plugin start date', 'iworks-plugins-management' ),
 				'type'  => 'date',
 			),
-			'_plugin_date_end'       => array(
-				'label' => __( 'plugin end date', 'iworks-plugins-management' ),
+			'_plugin_date_end'        => array(
+				'label' => __( 'Plugin end date', 'iworks-plugins-management' ),
 				'type'  => 'date',
 			),
 			'_realization_date_start' => array(
@@ -345,26 +345,26 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 				'label' => __( 'Realization end date', 'iworks-plugins-management' ),
 				'type'  => 'date',
 			),
-			'_plugin_cost'           => array(
-				'label'    => __( 'plugin cost', 'iworks-plugins-management' ),
+			'_plugin_cost'            => array(
+				'label'    => __( 'Plugin cost', 'iworks-plugins-management' ),
 				'type'     => 'number',
 				'sanitize' => 'floatval',
-				'sufix'    => __( 'PLN', 'iworks-plugins-management' ),
+				'sufix'    => __( 'PlN', 'iworks-plugins-management' ),
 			),
-			'_plugin_funding'        => array(
-				'label'    => __( 'plugin amount of funding', 'iworks-plugins-management' ),
+			'_plugin_funding'         => array(
+				'label'    => __( 'Plugin amount of funding', 'iworks-plugins-management' ),
 				'type'     => 'number',
 				'sanitize' => 'floatval',
-				'sufix'    => __( 'PLN', 'iworks-plugins-management' ),
+				'sufix'    => __( 'PlN', 'iworks-plugins-management' ),
 			),
-			'_plugin_currency'       => array(
-				'label'    => __( 'plugin currency', 'iworks-plugins-management' ),
+			'_plugin_currency'        => array(
+				'label'    => __( 'Plugin currency', 'iworks-plugins-management' ),
 				'type'     => 'text',
 				'sanitize' => 'esc_html',
 				'hide'     => true,
 			),
-			'_plugin_url'            => array(
-				'label'    => __( 'plugin URL', 'iworks-plugins-management' ),
+			'_plugin_url'             => array(
+				'label'    => __( 'Plugin URL', 'iworks-plugins-management' ),
 				'type'     => 'url',
 				'sanitize' => 'esc_url',
 			),

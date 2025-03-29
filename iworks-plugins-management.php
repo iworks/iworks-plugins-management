@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: iWorks Plugins Management
+Plugin Name: Plugins Management
 Text Domain: iworks-plugins-management
 Plugin URI: PLUGIN_URI
 Description: PLUGIN_TAGLINE
@@ -54,16 +54,7 @@ if ( ! class_exists( 'iworks_options' ) ) {
 /**
  * load posttypes - change to `__return_true' to load
  */
-add_filter( 'iworks-plugins-management/load/posttype/faq', '__return_false' );
-add_filter( 'iworks-plugins-management/load/posttype/hero', '__return_false' );
-add_filter( 'iworks-plugins-management/load/posttype/opinion', '__return_false' );
-add_filter( 'iworks-plugins-management/load/posttype/page', '__return_false' );
-add_filter( 'iworks-plugins-management/load/posttype/person', '__return_false' );
-add_filter( 'iworks-plugins-management/load/posttype/post', '__return_false' );
-add_filter( 'iworks-plugins-management/load/posttype/project', '__return_false' );
-add_filter( 'iworks-plugins-management/load/posttype/promo', '__return_false' );
-add_filter( 'iworks-plugins-management/load/posttype/publication', '__return_false' );
-
+add_filter( 'iworks-plugins-management/load/posttype/plugin', '__return_true' );
 /**
  * load options
  */
