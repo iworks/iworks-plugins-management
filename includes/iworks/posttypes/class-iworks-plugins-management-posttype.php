@@ -207,11 +207,19 @@ abstract class iworks_iworks_plugins_management_posttype_base extends iworks_iwo
 				echo $one['label'];
 				echo '<br />';
 			}
+			$classes = array();
+			switch ( $one['type'] ) {
+				case 'text':
+				case 'url':
+					$classes[] = 'large-text';
+					break;
+			}
 			printf(
-				'<input type="%s" value="%s" name="%s" class="large-text" />',
+				'<input type="%s" value="%s" name="%s" class="%s" />',
 				esc_attr( $one['type'] ),
 				esc_attr( $one['meta']['value'] ),
-				esc_attr( $one['meta']['key'] )
+				esc_attr( $one['meta']['key'] ),
+				esc_attr( implode( ' ', $classes ) )
 			);
 			echo '</label>';
 			if ( isset( $one['description'] ) ) {
@@ -222,6 +230,11 @@ abstract class iworks_iworks_plugins_management_posttype_base extends iworks_iwo
 		echo '</div>';
 	}
 
+	/**
+	 * Meta Field: main render method: image
+	 *
+	 * @since 1.0.0
+	 */
 	private function render_meta_image( $post, $one ) {
 		if ( is_admin() ) {
 			wp_enqueue_media();
@@ -264,6 +277,38 @@ abstract class iworks_iworks_plugins_management_posttype_base extends iworks_iwo
 		echo '</p>';
 	}
 
+	/**
+	 * Meta Field: main render method: checkbox
+	 *
+	 * @since 1.0.0
+	 */
+	private function render_meta_checkbox( $post, $one ) {
+		echo '<p>';
+		echo '<label>';
+		$classes = array();
+		printf(
+			'<input type="%s" value="1" name="%s" class="%s" %s />',
+			esc_attr( $one['type'] ),
+			esc_attr( $one['meta']['key'] ),
+			esc_attr( implode( ' ', $classes ) ),
+			( 'yes' === $one['meta']['value'] ) ? 'checked="checked"' : ''
+		);
+		if ( isset( $one['label'] ) ) {
+			echo ' ';
+			echo $one['label'];
+		}
+		echo '</label>';
+		if ( isset( $one['description'] ) ) {
+			printf( '<span class="description">%s</span>', $one['description'] );
+		}
+		echo '</p>';
+	}
+
+	/**
+	 * Meta Field: main render method: select
+	 *
+	 * @since 1.0.0
+	 */
 	private function render_meta_select( $post, $one ) {
 		$value = get_post_meta( $post->ID, $one['name'], true );
 		echo '<p>';
@@ -290,6 +335,11 @@ abstract class iworks_iworks_plugins_management_posttype_base extends iworks_iwo
 		echo '</p>';
 	}
 
+	/**
+	 * Meta Field: main render method: radio
+	 *
+	 * @since 1.0.0
+	 */
 	private function render_meta_radio( $post, $one ) {
 		$value = get_post_meta( $post->ID, $one['name'], true );
 		echo '<p>';
@@ -374,6 +424,9 @@ abstract class iworks_iworks_plugins_management_posttype_base extends iworks_iwo
 				switch ( $one['type'] ) {
 					case 'url':
 						$value = filter_input( INPUT_POST, $one['name'], FILTER_SANITIZE_URL );
+						break;
+					case 'checkbox':
+						$value = isset( $_POST[ $one['name'] ] ) ? 'yes' : 'no';
 						break;
 					default:
 						$value = wp_kses_post( filter_input( INPUT_POST, $one['name'], FILTER_UNSAFE_RAW ) );
@@ -474,6 +527,9 @@ abstract class iworks_iworks_plugins_management_posttype_base extends iworks_iwo
 				$key   = $this->get_post_meta_name( $field['name'], $group );
 				$value = filter_input( INPUT_POST, $key );
 				switch ( $field['type'] ) {
+					case 'checkbox':
+						$value = $value ? 'yes' : 'no';
+						break;
 					case 'image':
 						$value = intval( $value );
 						break;
@@ -485,9 +541,10 @@ abstract class iworks_iworks_plugins_management_posttype_base extends iworks_iwo
 				if ( $value ) {
 					update_post_meta( $post_id, $key, $value );
 				}
-				do_action( 'iworks/opi-science-portal-support/postmeta/update', $post_id, $field, $key, $value );
+				do_action( 'iworks/iworks-plugins-management/postmeta/update', $post_id, $field, $key, $value );
 			}
 		}
+		do_action( 'iworks/iworks-plugins-management/' . $post_type . '/meta/updated', $post_id );
 	}
 
 	protected function get_post_meta_name( $name, $group = '' ) {

@@ -36,14 +36,6 @@ class iworks_iworks_plugins_management extends iworks_iworks_plugins_management_
 	 */
 	private array $objects = array();
 
-
-	/**
-	 * plugins page
-	 *
-	 * @since 1.0.0
-	 */
-	private string $meta_name_plugins_page_id = 'iwpm_plugins_page_id';
-
 	public function __construct() {
 		parent::__construct();
 		$this->version    = 'PLUGIN_VERSION';
@@ -250,16 +242,16 @@ class iworks_iworks_plugins_management extends iworks_iworks_plugins_management_
 	 */
 	public function action_admin_init_add_settings_fields() {
 		add_settings_field(
-			$this->meta_name_plugins_page_id,
+			$this->option_name_plugins_page_id,
 			__( 'Plugins', 'iworks-plugins-management' ),
-			array( $this, 'add_settings_meta_name_plugins_page_id' ),
+			array( $this, 'add_settings_option_name_plugins_page_id' ),
 			'reading',
 			'default',
 			array(
 				'class' => 'opi-feng-plugins',
 			),
 		);
-		register_setting( 'reading', $this->meta_name_plugins_page_id );
+		register_setting( 'reading', $this->option_name_plugins_page_id );
 	}
 
 	/**
@@ -267,12 +259,12 @@ class iworks_iworks_plugins_management extends iworks_iworks_plugins_management_
 	 *
 	 * @since 1.0.0
 	 */
-	public function add_settings_meta_name_plugins_page_id( $args ) {
+	public function add_settings_option_name_plugins_page_id( $args ) {
 		wp_dropdown_pages(
 			array(
 				'show_option_none' => __( '&mdash; Select &mdash;', 'iworks-plugins-management' ),
-				'selected'         => get_option( $this->meta_name_plugins_page_id ),
-				'name'             => $this->meta_name_plugins_page_id,
+				'selected'         => get_option( $this->option_name_plugins_page_id ),
+				'name'             => $this->option_name_plugins_page_id,
 			)
 		);
 	}

@@ -51,9 +51,8 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 		 * WordPress Hooks
 		 */
 		add_action( 'add_meta_boxes_' . $this->posttypes_names[ $this->posttype_name ], array( $this, 'add_meta_boxes' ) );
-		add_action( 'pre_get_posts', array( $this, 'set_default_order' ) );
 		add_filter( 'the_content', array( $this, 'the_content' ) );
-		add_action( 'wp_loaded', array( $this, 'setup' ) );
+		add_action( 'iworks/iworks-plugins-management/' . $this->posttypes_names[ $this->posttype_name ] . '/meta/updated', array( $this, 'action_maybe_get_github_data' ) );
 	}
 
 	/**
@@ -64,43 +63,72 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 	public function action_init_settings() {
 		$this->load_plugin_admin_assets                                     = true;
 		$this->meta_boxes[ $this->posttypes_names[ $this->posttype_name ] ] = array(
-			'Plugin-data'  => array(
+			'plugin-data' => array(
 				'title'  => __( 'Plugin Data', 'iworks-plugins-management' ),
 				'fields' => array(
 					array(
-						'name'  => 'icon',
-						'type'  => 'image',
-						'label' => esc_html__( 'Icon', 'iworks-plugins-management' ),
+						'name'             => 'release_date',
+						'type'             => 'date',
+						'label'            => esc_html__( 'Release Date', 'iworks-plugins-management' ),
+						'git_map_releases' => 'published_at',
 					),
 					array(
-						'name'  => 'opinion_url',
+						'name'    => 'url_git',
+						'type'    => 'url',
+						'label'   => esc_html__( 'Git URL', 'iworks-plugins-management' ),
+						'git_map' => 'html_url',
+					),
+					array(
+						'name'             => 'version',
+						'type'             => 'text',
+						'label'            => esc_html__( 'Version', 'iworks-plugins-management' ),
+						'td_classes'       => array( 'has-text-align-center' ),
+						'git_map_releases' => 'tag_name',
+					),
+					array(
+						'name'  => 'url_main',
 						'type'  => 'url',
-						'label' => esc_html__( 'The Opinion URL', 'iworks-plugins-management' ),
+						'label' => esc_html__( 'URL', 'iworks-plugins-management' ),
 					),
 					array(
-						'name'  => 'author_url',
+						'name'  => 'url_issues',
 						'type'  => 'url',
-						'label' => esc_html__( 'The Opinion Author URL', 'iworks-plugins-management' ),
-					),
-				),
-			),
-			'Plugin-media' => array(
-				'title'  => __( 'Plugin Media', 'iworks-plugins-management' ),
-				'fields' => array(
-					array(
-						'name'  => 'icon',
-						'type'  => 'image',
-						'label' => esc_html__( 'Icon', 'iworks-plugins-management' ),
+						'label' => esc_html__( 'Issues URL', 'iworks-plugins-management' ),
 					),
 					array(
-						'name'  => 'opinion_url',
+						'name'  => 'url_i18n',
 						'type'  => 'url',
-						'label' => esc_html__( 'The Opinion URL', 'iworks-plugins-management' ),
+						'label' => esc_html__( 'i18n URL', 'iworks-plugins-management' ),
 					),
 					array(
-						'name'  => 'author_url',
-						'type'  => 'url',
-						'label' => esc_html__( 'The Opinion Author URL', 'iworks-plugins-management' ),
+						'name'       => 'v_options',
+						'type'       => 'text',
+						'label'      => esc_html__( 'Options', 'iworks-plugins-management' ),
+						'td_classes' => array( 'has-text-align-center' ),
+					),
+					array(
+						'name'       => 'v_rate',
+						'type'       => 'text',
+						'label'      => esc_html__( 'Rate', 'iworks-plugins-management' ),
+						'td_classes' => array( 'has-text-align-center' ),
+					),
+					array(
+						'name'       => 'v_tested',
+						'type'       => 'text',
+						'label'      => esc_html__( 'Tested', 'iworks-plugins-management' ),
+						'td_classes' => array( 'has-text-align-center' ),
+					),
+					array(
+						'name'       => 'free',
+						'type'       => 'checkbox',
+						'label'      => esc_html__( 'Free', 'iworks-plugins-management' ),
+						'td_classes' => array( 'has-text-align-center' ),
+					),
+					array(
+						'name'       => 'blueprint',
+						'type'       => 'checkbox',
+						'label'      => esc_html__( 'blueprint.json', 'iworks-plugins-management' ),
+						'td_classes' => array( 'has-text-align-center' ),
 					),
 				),
 			),
@@ -108,16 +136,6 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 	}
 
 	public function action_init_register_taxonomy() {}
-
-	public function setup() {
-		$this->partners_types = array(
-			'lider'         => __( 'Liders', 'iworks-plugins-management' ),
-			'scientific'    => __( 'Scientific Partners', 'iworks-plugins-management' ),
-			'business'      => __( 'Business Partners', 'iworks-plugins-management' ),
-			'partner'       => __( 'Partners', 'iworks-plugins-management' ),
-			'subcontractor' => __( 'Subcontractors', 'iworks-plugins-management' ),
-		);
-	}
 
 	/**
 	 * Set default order
@@ -131,13 +149,8 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 		if ( $this->posttype_name !== $query->get( 'post_type' ) ) {
 			return;
 		}
-		$query->set( 'meta_key', '_plugin_date_start' );
+		$query->set( 'meta_key', 'release_date' );
 		$query->set(
-			'orderby',
-			array(
-				'meta_value' => 'DESC',
-				'title'      => 'ASC',
-			)
 		);
 	}
 
@@ -147,60 +160,73 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 	 * @since 1.0.0
 	 */
 	public function the_content( $content ) {
-		if ( get_post_type() !== $this->posttype_name ) {
+		if ( ! is_page( get_option( $this->option_name_plugins_page_id ) ) ) {
 			return $content;
 		}
-		$post_ID = get_the_ID();
-		$c       = '';
-		$this->set_fields();
-		/**
-		 * fields
-		 */
-		$show = false;
-		foreach ( $this->fields as $key => $one ) {
-			$value = get_post_meta( $post_ID, $key, true );
-			if ( empty( $value ) ) {
-				continue;
-			}
-			if ( isset( $one['type'] ) && 'url' === $one['type'] ) {
-				$value = sprintf(
-					'<a href="%1$s" target="_blank" class="external" title="%2$s">%1$s</a>',
-					esc_url( $value ),
-					esc_attr__( 'Opens in a new window', 'iworks-plugins-management' )
-				);
-			} elseif ( isset( $one['sanitize'] ) ) {
-				$value = $one['sanitize']( $value );
-			} else {
-				$value = esc_html( $value );
-			}
-			$this->fields[ $key ]['value'] = $value;
-			$show                          = true;
+		$group = 'plugin-data';
+
+		$content .= '<figure class="wp-block-table is-style-stripes alignwide"><table class="has-fixed-layout">';
+		$content .= '<thead>';
+		$content .= sprintf( '<th>%s</th>', esc_html__( 'Plugin Name', 'iworks-plugins-management' ) );
+		foreach ( $this->meta_boxes[ $this->posttypes_names[ $this->posttype_name ] ][ $group ]['fields'] as $field ) {
+			$content .= sprintf( '<th>%s</th>', esc_html( $field['label'] ) );
 		}
-		if ( $show ) {
-			$args = array(
-				'fields' => $this->fields,
-			);
-			ob_start();
-			get_template_part( 'template-parts/plugin/part', 'data', $args );
-			$c .= ob_get_contents();
-			ob_end_clean();
+		$content      .= '</thead>';
+		$content      .= '<tbody>';
+		$wp_query_args = array(
+			'post_type'      => $this->posttypes_names[ $this->posttype_name ],
+			'posts_per_page' => -1,
+			'meta_key'       => $this->get_post_meta_name( 'release_date', $group ),
+			'orderby'        => array(
+				'meta_value' => 'ASC',
+				'title'      => 'ASC',
+			),
+		);
+		$wp_query      = new WP_Query( $wp_query_args );
+		if ( $wp_query->have_posts() ) {
+			while ( $wp_query->have_posts() ) {
+				$wp_query->the_post();
+				$content .= '<tr>';
+				$content .= sprintf( '<td>%s</td>', get_the_title() );
+				foreach ( $this->meta_boxes[ $this->posttypes_names[ $this->posttype_name ] ][ $group ]['fields'] as $field ) {
+					$value    = get_post_meta( get_the_ID(), $this->get_post_meta_name( $field['name'], $group ), true );
+					$content .= sprintf(
+						'<td class="%s">',
+						esc_attr( isset( $field['td_classes'] ) ? implode( ' ', $field['td_classes'] ) : '' )
+					);
+					if ( $value ) {
+						switch ( $field['type'] ) {
+							case 'text':
+								$content .= $value;
+								break;
+							case 'date':
+								$content .= substr( $value, 0, 10 );
+								break;
+							case 'checkbox':
+								$content .= $value;
+								break;
+							case 'url':
+								$content .= sprintf(
+									'<a href="%s">%s</a>',
+									esc_url( $value ),
+									esc_html( $field['label'] )
+								);
+								break;
+						}
+					} else {
+						$content .= '&mdash;';
+					}
+					$content .= '</td>';
+				}
+				$content .= '</tr>';
+			}
 		}
-		/**
-		 * partners
-		 */
-		ob_start();
-		get_template_part( 'template-parts/plugin/part', 'partners' );
-		$c .= ob_get_contents();
-		ob_end_clean();
-		/**
-		 * Content
-		 */
-		$c .= $content;
-		/**
-		 * media
-		 */
-		$c .= $this->get_media_html( $post_ID );
-		return $c;
+		// Restore original Post Data.
+		wp_reset_postdata();
+		$content .= '</tbody>';
+		$content .= '</table>';
+		$content .= '</figure>';
+		return $content;
 	}
 
 	/**
@@ -247,7 +273,7 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 			'show_in_rest'        => true,
 			'supports'            => array( 'title', 'editor', 'excerpt', 'thumbnail' ),
 			'rewrite'             => array(
-				'slug' => _x( 'Plugin', 'slug for single plugin', 'iworks-plugins-management' ),
+				'slug' => _x( 'plugin', 'slug for single plugin', 'iworks-plugins-management' ),
 			),
 		);
 		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
@@ -256,187 +282,79 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 		register_post_type( $this->posttypes_names[ $this->posttype_name ], $args );
 	}
 
-	/**
-	 * Add meta boxes
-	 *
-	 * @since 1.0.0
-	 */
-	public function x_add_meta_boxes() {
-		/**
-		 * Partners
-		 */
-		foreach ( $this->partners_types as $type => $label ) {
-			add_meta_box(
-				'opi-post-partners-' . $type,
-				$label,
-				array( $this, 'html_post_partners_' . $type ),
-				$this->posttype_name,
-				'normal',
-				'default'
-			);
-		}
-	}
-
-	private function html_partners( $post, $type ) {
-		printf(
-			'<div id="opi-partner-%1$s-container" class="opi-partner-container opi-partner-%1$s-container" data-partner="%1$s" aria-hidden="true">',
-			esc_attr( $type )
-		);
-		echo '<p>';
-		printf(
-			'<button type="button" class="button button-add-partner">%s</button>',
-			esc_html__( 'Add a partner', 'iworks-plugins-management' )
-		);
-		echo '</p>';
-		printf(
-			'<div id="opi-partner-%s-container-rows">',
-			esc_attr( $type )
-		);
-		$value   = get_post_meta( $post->ID, $this->option_name_partners, true );
-		$parners = isset( $value[ $type ] ) ? $value[ $type ] : array();
-		foreach ( $parners as $caption ) {
-			$this->partner_row( array( 'caption' => $caption ), $type );
-		}
-		echo '</div>';
-		echo '</div>';
-		printf(
-			'<script type="text/html" id="tmpl-opi-partner-%s-row">',
-			esc_attr( $type )
-		);
-		$this->partner_row( array(), $type );
-		echo '</script>';
-	}
-
-	public function html_post_partners_lider( $post ) {
-		$this->html_partners( $post, 'lider' );
-	}
-
-	public function html_post_partners_scientific( $post ) {
-		$this->html_partners( $post, 'scientific' );
-	}
-
-	public function html_post_partners_business( $post ) {
-		$this->html_partners( $post, 'business' );
-	}
-
-	public function html_post_partners_partner( $post ) {
-		$this->html_partners( $post, 'partner' );
-	}
-
-	public function html_post_partners_subcontractor( $post ) {
-		$this->html_partners( $post, 'subcontractor' );
-	}
-
-	private function set_fields() {
-		$this->fields = array(
-			'_plugin_date_start'      => array(
-				'label' => __( 'Plugin start date', 'iworks-plugins-management' ),
-				'type'  => 'date',
-			),
-			'_plugin_date_end'        => array(
-				'label' => __( 'Plugin end date', 'iworks-plugins-management' ),
-				'type'  => 'date',
-			),
-			'_realization_date_start' => array(
-				'label' => __( 'Realization start date', 'iworks-plugins-management' ),
-				'type'  => 'date',
-			),
-			'_realization_date_end'   => array(
-				'label' => __( 'Realization end date', 'iworks-plugins-management' ),
-				'type'  => 'date',
-			),
-			'_plugin_cost'            => array(
-				'label'    => __( 'Plugin cost', 'iworks-plugins-management' ),
-				'type'     => 'number',
-				'sanitize' => 'floatval',
-				'sufix'    => __( 'PlN', 'iworks-plugins-management' ),
-			),
-			'_plugin_funding'         => array(
-				'label'    => __( 'Plugin amount of funding', 'iworks-plugins-management' ),
-				'type'     => 'number',
-				'sanitize' => 'floatval',
-				'sufix'    => __( 'PlN', 'iworks-plugins-management' ),
-			),
-			'_plugin_currency'        => array(
-				'label'    => __( 'Plugin currency', 'iworks-plugins-management' ),
-				'type'     => 'text',
-				'sanitize' => 'esc_html',
-				'hide'     => true,
-			),
-			'_plugin_url'             => array(
-				'label'    => __( 'Plugin URL', 'iworks-plugins-management' ),
-				'type'     => 'url',
-				'sanitize' => 'esc_url',
-			),
-		);
-	}
-
-	/**
-	 * HTML for metabox
-	 *
-	 * @since 1.0.0
-	 */
-	public function html_data( $post ) {
-		$this->set_fields();
-		wp_nonce_field( __CLASS__, '_plugin_nonce' );
-		foreach ( $this->fields as $key => $one ) {
-			$value = get_post_meta( $post->ID, $key, true );
-			if ( isset( $one['sanitize'] ) ) {
-				$value = $one['sanitize']( $value );
+	public function action_maybe_get_github_data( $post_id ) {
+		$group = 'plugin-data';
+		$url   = get_post_meta( get_the_ID(), $this->get_post_meta_name( 'url_git', $group ), true );
+		if ( preg_match( '/^https:\/\/github.com\/([^\/]+)\/([^\/]+)\/?/', $url, $matches ) ) {
+			$repository = $matches[1] . '/' . $matches[2];
+			$data       = $this->get_github_info( $repository, 'releases' );
+			if ( ! empty( $data ) ) {
+				foreach ( $this->meta_boxes[ $this->posttypes_names[ $this->posttype_name ] ][ $group ]['fields'] as $field ) {
+					if (
+						isset( $field['git_map_releases'] )
+						&& isset( $data[ $field['git_map_releases'] ] )
+						&& $data[ $field['git_map_releases'] ]
+					) {
+						$key   = $this->get_post_meta_name( $field['name'], $group );
+						$value = $data[ $field['git_map_releases'] ];
+						l( array( $post_id, $key, $value ) );
+						update_post_meta( $post_id, $key, $value );
+					}
+				}
 			}
-			$method = sprintf(
-				'input_%s',
-				$one['type']
-			);
-			if ( method_exists( $this, $method ) ) {
-				echo $this->$method( $key, $value, $one['label'] );
+			/**
+			 * repositiry data
+			 */
+			$data = $this->get_github_info( $repository );
+			if ( ! empty( $data ) ) {
+				foreach ( $this->meta_boxes[ $this->posttypes_names[ $this->posttype_name ] ][ $group ]['fields'] as $field ) {
+					if (
+						isset( $field['git_map'] )
+						&& isset( $data[ $field['git_map'] ] )
+						&& $data[ $field['git_map'] ]
+					) {
+						$key = $this->get_post_meta_name( $field['name'], $group );
+						update_post_meta( $post_id, $key, $data[ $field['git_map'] ] );
+					}
+				}
 			}
 		}
 	}
 
-	private function get_src( $post_id ) {
-		$src = null;
-		if ( isset( $this->images[ $post_id ] ) ) {
-			$src = $this->images[ $post_id ];
-		}
-		$attachment_id = get_post_meta( $post_id, $this->option_name_media, true );
-		if ( ! empty( $attachment_id ) ) {
-			$src = wp_get_attachment_url( $attachment_id );
-		}
-		if ( empty( $src ) ) {
-			return $src;
-		}
-		$this->images[ $post_id ] = $src;
-		return $src;
-	}
-
-
 	/**
-	 * Partner row helper
+	 * Get the latest release from the selected repository
 	 *
 	 * @since 1.0.0
+	 * @version 1.0.0
+	 * @return array
 	 */
-	protected function partner_row( $data = array(), $type = '' ) {
-		$data = wp_parse_args(
-			$data,
-			array(
-				'caption' => '{{{data.caption}}}',
-			)
+	private function get_github_info( $repository, $action = null ) : array {
+		// Create the request URI
+		$request_uri = sprintf(
+			'https://api.github.com/repos/%s',
+			$repository,
 		);
-		echo '<div class="opi-partner-row">';
-		echo '<span class="dashicons dashicons-move"></span>';
-		printf(
-			'<input type="text" class="text-wide" name="%s[%s][]" value="%s" />',
-			esc_attr( $this->option_name_partners ),
-			esc_attr( $type ),
-			esc_attr( $data['caption'] )
-		);
-		printf(
-			'<button class="trash" type="button" aria-label="%s"><span class="dashicons dashicons-trash"></span></button>',
-			esc_attr__( 'Remove Partner', 'iworks-plugins-management' )
-		);
-		echo '</div>';
+		if ( $action ) {
+			$request_uri = sprintf(
+				'https://api.github.com/repos/%s/%s',
+				$repository,
+				$action
+			);
+		}
+		// Get the response from the API
+		$request = wp_remote_get( $request_uri );
+		// If the API response has an error code, stop
+		$response_codes = wp_remote_retrieve_response_code( $request );
+		if ( $response_codes < 200 || $response_codes >= 300 ) {
+			return array();
+		}
+		// Decode the response body
+		$response = json_decode( wp_remote_retrieve_body( $request ), true );
+		// If the response is an array, return the first item
+		if ( is_array( $response ) && ! empty( $response[0] ) ) {
+			$response = $response[0];
+		}
+		return $response;
 	}
-
 }
 

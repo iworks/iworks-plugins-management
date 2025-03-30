@@ -72,6 +72,13 @@ class iworks_iworks_plugins_management_base {
 	 */
 	protected $options;
 
+	/**
+	 * plugins page id option name
+	 *
+	 * @since 1.0.0
+	 */
+	protected string $option_name_plugins_page_id = 'iwpm_plugins_page_id';
+
 	public function __construct() {
 		/**
 		 * static settings
