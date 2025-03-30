@@ -5,32 +5,29 @@ msgstr ""
 "Project-Id-Version: 0.0.1\n"
 "Report-Msgid-Bugs-To: http://iworks.pl\n"
 "POT-Creation-Date: 2025-03-30 14:38:14+00:00\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2025-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Marcin Pietrzak <marcin@iworks.pl>\n"
+"PO-Revision-Date: 2025-03-30 16:40+0200\n"
+"Last-Translator: \n"
 "Language-Team: iWorks <support@iworks.pl>\n"
-"Language: en\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Poedit-Country: United States\n"
+"Language: pl_PL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: "
-"__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
-"attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
-"X-Poedit-Basepath: ../\n"
-"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-KeywordsList: __;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c\n"
+"X-Poedit-Basepath: ..\n"
 "X-Poedit-Bookmarks: \n"
 "X-Textdomain-Support: yes\n"
-"X-Generator: grunt-wp-i18n 1.0.3\n"
+"X-Generator: Poedit 3.5\n"
+"X-Poedit-SearchPath-0: .\n"
 
 #: includes/iworks/class-iworks-plugins-management.php:196
 msgid "Donate"
-msgstr ""
+msgstr "Przekaż datek"
 
 #: includes/iworks/class-iworks-plugins-management.php:210
 msgid "GitHub"
-msgstr ""
+msgstr "GitHub"
 
 #: includes/iworks/class-iworks-plugins-management.php:246
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:241
@@ -45,46 +42,46 @@ msgstr ""
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype.php:144
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype.php:324
 msgid "&mdash; Select &mdash;"
-msgstr ""
+msgstr "&mdash; Wybierz &mdash;"
 
 #: includes/iworks/options/options.php:263
 msgid "An error occurred while getting the configuration."
-msgstr ""
+msgstr "Wystąpił błąd w czasie pobierania konfiguracji."
 
 #: includes/iworks/options/options.php:842
 #: includes/iworks/options/options.php:1965
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype.php:270
 msgid "Select Image"
-msgstr ""
+msgstr "Wybierz obrazek"
 
 #: includes/iworks/options/options.php:847
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype.php:274
 msgid "Delete image"
-msgstr ""
+msgstr "Usuń obrazek"
 
 #: includes/iworks/options/options.php:955
 msgid "Save Changes"
-msgstr ""
+msgstr "Zapisz zmiany"
 
 #: includes/iworks/options/options.php:1859
 msgid "Country"
-msgstr ""
+msgstr "Kraj"
 
 #: includes/iworks/options/options.php:1860
 msgid "City"
-msgstr ""
+msgstr "Miasto"
 
 #: includes/iworks/options/options.php:1861
 msgid "Street"
-msgstr ""
+msgstr "Ulica"
 
 #: includes/iworks/options/options.php:1862
 msgid "ZIP code"
-msgstr ""
+msgstr "Kod pocztowy"
 
 #: includes/iworks/options/options.php:2018
 msgid "OFF"
-msgstr ""
+msgstr "Wyłącz"
 
 #: includes/iworks/options/options.php:2019
 msgid "ON"
@@ -92,7 +89,7 @@ msgstr ""
 
 #: includes/iworks/options/options.php:2084
 msgid "Failed Security Check"
-msgstr ""
+msgstr "Błąd w trakcie sprawdzania bezpieczeństwa"
 
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:67
 msgid "Plugin Data"
@@ -100,7 +97,7 @@ msgstr ""
 
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:72
 msgid "Release Date"
-msgstr ""
+msgstr "Data opublikowania"
 
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:78
 msgid "Git URL"
@@ -108,11 +105,11 @@ msgstr ""
 
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:84
 msgid "Version"
-msgstr ""
+msgstr "Wersja"
 
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:91
 msgid "URL"
-msgstr ""
+msgstr "Adres URL"
 
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:96
 msgid "Issues URL"
@@ -140,7 +137,7 @@ msgstr ""
 
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:130
 msgid "blueprint.json"
-msgstr ""
+msgstr "blueprint.json"
 
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:170
 msgid "Plugin Name"
@@ -148,15 +145,15 @@ msgstr ""
 
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:245
 msgid "Add New plugin"
-msgstr ""
+msgstr "Utwórz wtyczkę"
 
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:246
 msgid "Add New"
-msgstr ""
+msgstr "Utwórz"
 
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:247
 msgid "New plugin"
-msgstr ""
+msgstr "Utwórz wtyczkę"
 
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:248
 msgid "Edit plugin"
@@ -177,11 +174,11 @@ msgstr ""
 
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:253
 msgid "Not found"
-msgstr ""
+msgstr "Niczego nie znaleziono"
 
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:254
 msgid "Not found in Trash"
-msgstr ""
+msgstr "Nie znaleziono w koszu"
 
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:255
 msgid "Plugin list"
@@ -193,27 +190,27 @@ msgstr ""
 
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:257
 msgid "Filter items list"
-msgstr ""
+msgstr "Filtruj elementy"
 
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:262
 msgid "Plugin"
-msgstr ""
+msgstr "Wtyczka"
 
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype.php:440
 msgid "Order"
-msgstr ""
+msgstr "Kolejność"
 
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype.php:465
 msgid "Selected Taxonomy dosn't exists."
-msgstr ""
+msgstr "Nie istnieje wybrana taksonomia."
 
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype.php:588
 msgid "Select or Upload Media"
-msgstr ""
+msgstr "Wybierz lub prześlij obrazek"
 
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype.php:590
 msgid "Use this Media"
-msgstr ""
+msgstr "Użyj wybranego"
 
 #. Plugin Name of the plugin/theme
 msgid "Plugins Management"
@@ -221,19 +218,19 @@ msgstr ""
 
 #. Plugin URI of the plugin/theme
 msgid "PLUGIN_URI"
-msgstr ""
+msgstr "PLUGIN_URI"
 
 #. Description of the plugin/theme
 msgid "PLUGIN_TAGLINE"
-msgstr ""
+msgstr "PLUGIN_TAGLINE"
 
 #. Author of the plugin/theme
 msgid "Marcin Pietrzak"
-msgstr ""
+msgstr "Marcin Pietrzak"
 
 #. Author URI of the plugin/theme
 msgid "http://iworks.pl/"
-msgstr ""
+msgstr "http://iworks.pl/"
 
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:239
 msgctxt "Post Type General Name"
@@ -243,9 +240,9 @@ msgstr ""
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:240
 msgctxt "Post Type Singular Name"
 msgid "Plugin"
-msgstr ""
+msgstr "Wtyczka"
 
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:276
 msgctxt "slug for single plugin"
 msgid "plugin"
-msgstr ""
+msgstr "wtyczka"
