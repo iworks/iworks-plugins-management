@@ -4,17 +4,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.0.1\n"
 "Report-Msgid-Bugs-To: http://iworks.pl\n"
-"POT-Creation-Date: 2025-03-30 14:38:14+00:00\n"
-"PO-Revision-Date: 2025-03-30 16:40+0200\n"
+"POT-Creation-Date: 2025-03-30 15:53:06+00:00\n"
+"PO-Revision-Date: 2025-03-30 19:43+0200\n"
 "Last-Translator: \n"
 "Language-Team: iWorks <support@iworks.pl>\n"
 "Language: pl_PL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 "
+"|| n%100>14) ? 1 : 2);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: __;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c\n"
+"X-Poedit-KeywordsList: __;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;"
+"_nx_noop:1,2,3c;esc_attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;"
+"esc_html_x:1,2c\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-Bookmarks: \n"
 "X-Textdomain-Support: yes\n"
@@ -30,13 +33,13 @@ msgid "GitHub"
 msgstr "GitHub"
 
 #: includes/iworks/class-iworks-plugins-management.php:246
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:241
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:242
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:243
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:244
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:266
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:226
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:227
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:228
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:229
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:251
 msgid "Plugins"
-msgstr ""
+msgstr "Wtyczki"
 
 #: includes/iworks/class-iworks-plugins-management.php:265
 #: includes/iworks/posttypes/class-iworks-plugins-management-posttype.php:144
@@ -107,92 +110,88 @@ msgstr ""
 msgid "Version"
 msgstr "Wersja"
 
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:91
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:90
 msgid "URL"
 msgstr "Adres URL"
 
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:96
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:95
 msgid "Issues URL"
 msgstr ""
 
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:101
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:100
 msgid "i18n URL"
 msgstr ""
 
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:106
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:105
 msgid "Options"
 msgstr ""
 
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:112
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:110
 msgid "Rate"
-msgstr ""
+msgstr "Ocena"
 
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:118
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:115
 msgid "Tested"
 msgstr ""
 
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:124
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:120
 msgid "Free"
 msgstr ""
 
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:130
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:125
 msgid "blueprint.json"
 msgstr "blueprint.json"
 
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:170
-msgid "Plugin Name"
-msgstr ""
-
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:245
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:230
 msgid "Add New plugin"
 msgstr "Utwórz wtyczkę"
 
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:246
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:231
 msgid "Add New"
 msgstr "Utwórz"
 
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:247
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:232
 msgid "New plugin"
 msgstr "Utwórz wtyczkę"
 
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:248
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:233
 msgid "Edit plugin"
 msgstr ""
 
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:249
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:234
 msgid "Update plugin"
 msgstr ""
 
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:250
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:251
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:235
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:236
 msgid "View plugin"
 msgstr ""
 
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:252
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:237
 msgid "Search plugin"
 msgstr ""
 
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:253
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:238
 msgid "Not found"
 msgstr "Niczego nie znaleziono"
 
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:254
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:239
 msgid "Not found in Trash"
 msgstr "Nie znaleziono w koszu"
 
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:255
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:240
 msgid "Plugin list"
 msgstr ""
 
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:256
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:241
 msgid "Plugin list navigation"
 msgstr ""
 
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:257
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:242
 msgid "Filter items list"
 msgstr "Filtruj elementy"
 
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:262
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:247
 msgid "Plugin"
 msgstr "Wtyczka"
 
@@ -214,15 +213,7 @@ msgstr "Użyj wybranego"
 
 #. Plugin Name of the plugin/theme
 msgid "Plugins Management"
-msgstr ""
-
-#. Plugin URI of the plugin/theme
-msgid "PLUGIN_URI"
-msgstr "PLUGIN_URI"
-
-#. Description of the plugin/theme
-msgid "PLUGIN_TAGLINE"
-msgstr "PLUGIN_TAGLINE"
+msgstr "Zarządzanie wtyczkami"
 
 #. Author of the plugin/theme
 msgid "Marcin Pietrzak"
@@ -232,17 +223,17 @@ msgstr "Marcin Pietrzak"
 msgid "http://iworks.pl/"
 msgstr "http://iworks.pl/"
 
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:239
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:224
 msgctxt "Post Type General Name"
 msgid "Plugins"
-msgstr ""
+msgstr "Wtyczki"
 
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:240
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:225
 msgctxt "Post Type Singular Name"
 msgid "Plugin"
 msgstr "Wtyczka"
 
-#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:276
+#: includes/iworks/posttypes/class-iworks-plugins-management-posttype-plugin.php:261
 msgctxt "slug for single plugin"
 msgid "plugin"
 msgstr "wtyczka"

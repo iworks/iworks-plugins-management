@@ -47,12 +47,30 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 		 */
 		$this->posttype_name = preg_replace( '/^iworks_iworks_plugins_management_posttype_/', '', __CLASS__ );
 		$this->register_class_custom_posttype_name( $this->posttype_name, 'iw' );
+		$post_type = $this->posttypes_names[ $this->posttype_name ];
 		/**
 		 * WordPress Hooks
 		 */
-		add_action( 'add_meta_boxes_' . $this->posttypes_names[ $this->posttype_name ], array( $this, 'add_meta_boxes' ) );
+		add_action( "add_meta_boxes_{$post_type}", array( $this, 'add_meta_boxes' ) );
 		add_filter( 'the_content', array( $this, 'the_content' ) );
 		add_action( 'iworks/iworks-plugins-management/' . $this->posttypes_names[ $this->posttype_name ] . '/meta/updated', array( $this, 'action_maybe_get_github_data' ) );
+		add_filter( "manage_{$post_type}_posts_columns", array( $this, 'filter_manage_post_type_posts_columns' ) );
+		add_action( "manage_{$post_type}_posts_custom_column", array( $this, 'action_manage_post_type_posts_custom_column' ), 10, 2 );
+		add_filter( "manage_edit-{$post_type}_sortable_columns", array( $this, 'filter_manage_sortable_columns' ) );
+		/**
+		 * Own Hooks
+		 */
+		add_filter( 'iworks/iworks-plugins-management/post/meta', array( $this, 'filter_get_meta' ), 10, 3 );
+	}
+
+	public function filter_get_meta( $value, $group, $field ) {
+		if ( 'plugin-data' === $group ) {
+			switch ( $field['name'] ) {
+				case 'release_date':
+					return substr( $value, 0, 10 );
+			}
+		}
+		return $value;
 	}
 
 	/**
@@ -71,6 +89,11 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 						'type'             => 'date',
 						'label'            => esc_html__( 'Release Date', 'iworks-plugins-management' ),
 						'git_map_releases' => 'published_at',
+						'add_column'       => array(
+							'type'          => 'sortable',
+							'description'   => esc_html__( 'Table ordered by release date.', 'iworks-plugins-management' ),
+							'default_order' => 'asc',
+						),
 					),
 					array(
 						'name'    => 'url_git',
@@ -82,8 +105,8 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 						'name'             => 'version',
 						'type'             => 'text',
 						'label'            => esc_html__( 'Version', 'iworks-plugins-management' ),
-						'td_classes'       => array( 'has-text-align-center' ),
 						'git_map_releases' => 'tag_name',
+						'add_column'       => true,
 					),
 					array(
 						'name'  => 'url_main',
@@ -104,31 +127,29 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 						'name'       => 'v_options',
 						'type'       => 'text',
 						'label'      => esc_html__( 'Options', 'iworks-plugins-management' ),
-						'td_classes' => array( 'has-text-align-center' ),
+						'add_column' => true,
 					),
 					array(
 						'name'       => 'v_rate',
 						'type'       => 'text',
 						'label'      => esc_html__( 'Rate', 'iworks-plugins-management' ),
-						'td_classes' => array( 'has-text-align-center' ),
+						'add_column' => true,
 					),
 					array(
 						'name'       => 'v_tested',
 						'type'       => 'text',
 						'label'      => esc_html__( 'Tested', 'iworks-plugins-management' ),
-						'td_classes' => array( 'has-text-align-center' ),
+						'add_column' => true,
 					),
 					array(
-						'name'       => 'free',
-						'type'       => 'checkbox',
-						'label'      => esc_html__( 'Free', 'iworks-plugins-management' ),
-						'td_classes' => array( 'has-text-align-center' ),
+						'name'  => 'free',
+						'type'  => 'checkbox',
+						'label' => esc_html__( 'Free', 'iworks-plugins-management' ),
 					),
 					array(
-						'name'       => 'blueprint',
-						'type'       => 'checkbox',
-						'label'      => esc_html__( 'blueprint.json', 'iworks-plugins-management' ),
-						'td_classes' => array( 'has-text-align-center' ),
+						'name'  => 'blueprint',
+						'type'  => 'checkbox',
+						'label' => esc_html__( 'blueprint.json', 'iworks-plugins-management' ),
 					),
 				),
 			),
@@ -163,16 +184,7 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 		if ( ! is_page( get_option( $this->option_name_plugins_page_id ) ) ) {
 			return $content;
 		}
-		$group = 'plugin-data';
-
-		$content .= '<figure class="wp-block-table is-style-stripes alignwide"><table class="has-fixed-layout">';
-		$content .= '<thead>';
-		$content .= sprintf( '<th>%s</th>', esc_html__( 'Plugin Name', 'iworks-plugins-management' ) );
-		foreach ( $this->meta_boxes[ $this->posttypes_names[ $this->posttype_name ] ][ $group ]['fields'] as $field ) {
-			$content .= sprintf( '<th>%s</th>', esc_html( $field['label'] ) );
-		}
-		$content      .= '</thead>';
-		$content      .= '<tbody>';
+		$group         = 'plugin-data';
 		$wp_query_args = array(
 			'post_type'      => $this->posttypes_names[ $this->posttype_name ],
 			'posts_per_page' => -1,
@@ -186,15 +198,18 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 		if ( $wp_query->have_posts() ) {
 			while ( $wp_query->have_posts() ) {
 				$wp_query->the_post();
-				$content .= '<tr>';
-				$content .= sprintf( '<td>%s</td>', get_the_title() );
+				$content .= '<div class="wp-block-group" style="margin: 2em 0">';
+				$content .= sprintf( '<h2 class="wp-block-heading">%s</h2>', get_the_title() );
+				$content .= '<figure class="wp-block-table is-style-stripes"><table class="has-fixed-layout">';
 				foreach ( $this->meta_boxes[ $this->posttypes_names[ $this->posttype_name ] ][ $group ]['fields'] as $field ) {
-					$value    = get_post_meta( get_the_ID(), $this->get_post_meta_name( $field['name'], $group ), true );
-					$content .= sprintf(
-						'<td class="%s">',
-						esc_attr( isset( $field['td_classes'] ) ? implode( ' ', $field['td_classes'] ) : '' )
-					);
+					$value = get_post_meta( get_the_ID(), $this->get_post_meta_name( $field['name'], $group ), true );
 					if ( $value ) {
+						$content .= '<tr>';
+						$content .= sprintf( '<th class="has-text-align-left">%s</th>', esc_html( $field['label'] ) );
+						$content .= sprintf(
+							'<td class="%s">',
+							esc_attr( isset( $field['td_classes'] ) ? implode( ' ', $field['td_classes'] ) : '' )
+						);
 						switch ( $field['type'] ) {
 							case 'text':
 								$content .= $value;
@@ -207,25 +222,22 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 								break;
 							case 'url':
 								$content .= sprintf(
-									'<a href="%s">%s</a>',
-									esc_url( $value ),
-									esc_html( $field['label'] )
+									'<a href="%1$s">%1$s</a>',
+									esc_url( $value )
 								);
 								break;
 						}
-					} else {
-						$content .= '&mdash;';
+						$content .= '</td>';
+						$content .= '</tr>';
 					}
-					$content .= '</td>';
 				}
-				$content .= '</tr>';
+				$content .= '</table>';
+				$content .= '</figure>';
+				$content .= '</div>';
 			}
 		}
 		// Restore original Post Data.
 		wp_reset_postdata();
-		$content .= '</tbody>';
-		$content .= '</table>';
-		$content .= '</figure>';
 		return $content;
 	}
 
@@ -297,7 +309,6 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 					) {
 						$key   = $this->get_post_meta_name( $field['name'], $group );
 						$value = $data[ $field['git_map_releases'] ];
-						l( array( $post_id, $key, $value ) );
 						update_post_meta( $post_id, $key, $value );
 					}
 				}
