@@ -66,7 +66,6 @@ class iworks_iworks_plugins_management extends iworks_iworks_plugins_management_
 	}
 
 	public function action_admin_init() {
-		$this->check_option_object();
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
 	}
@@ -165,13 +164,9 @@ class iworks_iworks_plugins_management extends iworks_iworks_plugins_management_
 	 * @since 1.0.0
 	 */
 	public function action_init_settings() {
-		/**
-		 * options
-		 */
-		$this->check_option_object();
 		if ( is_admin() ) {
 		} else {
-			$file = 'assets/styles/iworks_plugins_management' . $this->dev . '.css';
+			$file = 'assets/styles/iworks-plugins-management-frontend' . $this->dev . '.css';
 			wp_enqueue_style( 'iworks-plugins-management', plugins_url( $file, $this->base ), array(), $this->get_version( $file ) );
 		}
 	}

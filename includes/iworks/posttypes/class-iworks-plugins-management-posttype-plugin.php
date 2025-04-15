@@ -52,11 +52,12 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 		 * WordPress Hooks
 		 */
 		add_action( "add_meta_boxes_{$post_type}", array( $this, 'add_meta_boxes' ) );
-		add_filter( 'the_content', array( $this, 'the_content' ) );
-		add_action( 'iworks/iworks-plugins-management/' . $this->posttypes_names[ $this->posttype_name ] . '/meta/updated', array( $this, 'action_maybe_get_github_data' ) );
-		add_filter( "manage_{$post_type}_posts_columns", array( $this, 'filter_manage_post_type_posts_columns' ) );
 		add_action( "manage_{$post_type}_posts_custom_column", array( $this, 'action_manage_post_type_posts_custom_column' ), 10, 2 );
+		add_action( 'iworks/iworks-plugins-management/' . $this->posttypes_names[ $this->posttype_name ] . '/meta/updated', array( $this, 'action_maybe_get_github_data' ) );
 		add_filter( "manage_edit-{$post_type}_sortable_columns", array( $this, 'filter_manage_sortable_columns' ) );
+		add_filter( "manage_{$post_type}_posts_columns", array( $this, 'filter_manage_post_type_posts_columns' ) );
+		add_filter( 'the_content', array( $this, 'filter_the_content_plugins_list' ) );
+		add_filter( 'the_content', array( $this, 'filter_the_content_plugin_details' ) );
 		/**
 		 * Own Hooks
 		 */
@@ -139,7 +140,11 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 						'name'       => 'v_tested',
 						'type'       => 'text',
 						'label'      => esc_html__( 'Tested', 'iworks-plugins-management' ),
-						'add_column' => true,
+						'add_column' => array(
+							'type'          => 'sortable',
+							'description'   => esc_html__( 'Table ordered by WordPress tested version.', 'iworks-plugins-management' ),
+							'default_order' => 'asc',
+						),
 					),
 					array(
 						'name'  => 'free',
@@ -180,64 +185,103 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 	 *
 	 * @since 1.0.0
 	 */
-	public function the_content( $content ) {
+	public function filter_the_content_plugins_list( $content ) {
 		if ( ! is_page( get_option( $this->option_name_plugins_page_id ) ) ) {
 			return $content;
 		}
-		$group         = 'plugin-data';
+		$permalink     = get_permalink( get_the_ID() );
 		$wp_query_args = array(
 			'post_type'      => $this->posttypes_names[ $this->posttype_name ],
 			'posts_per_page' => -1,
-			'meta_key'       => $this->get_post_meta_name( 'release_date', $group ),
+			'meta_key'       => $this->get_post_meta_name( 'release_date', 'plugin-data' ),
 			'orderby'        => array(
 				'meta_value' => 'ASC',
 				'title'      => 'ASC',
 			),
 		);
-		$wp_query      = new WP_Query( $wp_query_args );
+		switch ( get_query_var( 'orderby' ) ) {
+			case 'title':
+				$wp_query_args['orderby'] = 'title';
+				$wp_query_args['order']   = 'ASC';
+				break;
+		}
+		$wp_query = new WP_Query( $wp_query_args );
 		if ( $wp_query->have_posts() ) {
+			$link     = '<li><a href="%s">%s</a></li>';
+			$content .= '<ul class="iworks-plugins-management-order">';
+			$content .= sprintf(
+				$link,
+				esc_url( $permalink ),
+				esc_html__( 'Release Date', 'iworks-plugins-management' )
+			);
+			$content .= sprintf(
+				$link,
+				esc_url(
+					add_query_arg(
+						'orderby',
+						'title',
+						$permalink
+					)
+				),
+				esc_html__( 'Plugin Name', 'iworks-plugins-management' )
+			);
+			$content .= '</ul>';
 			while ( $wp_query->have_posts() ) {
 				$wp_query->the_post();
-				$content .= '<div class="wp-block-group" style="margin: 2em 0">';
-				$content .= sprintf( '<h2 class="wp-block-heading">%s</h2>', get_the_title() );
-				$content .= '<figure class="wp-block-table is-style-stripes"><table class="has-fixed-layout">';
-				foreach ( $this->meta_boxes[ $this->posttypes_names[ $this->posttype_name ] ][ $group ]['fields'] as $field ) {
-					$value = get_post_meta( get_the_ID(), $this->get_post_meta_name( $field['name'], $group ), true );
-					if ( $value ) {
-						$content .= '<tr>';
-						$content .= sprintf( '<th class="has-text-align-left">%s</th>', esc_html( $field['label'] ) );
-						$content .= sprintf(
-							'<td class="%s">',
-							esc_attr( isset( $field['td_classes'] ) ? implode( ' ', $field['td_classes'] ) : '' )
-						);
-						switch ( $field['type'] ) {
-							case 'text':
-								$content .= $value;
-								break;
-							case 'date':
-								$content .= substr( $value, 0, 10 );
-								break;
-							case 'checkbox':
-								$content .= $value;
-								break;
-							case 'url':
-								$content .= sprintf(
-									'<a href="%1$s">%1$s</a>',
-									esc_url( $value )
-								);
-								break;
-						}
-						$content .= '</td>';
-						$content .= '</tr>';
-					}
-				}
-				$content .= '</table>';
-				$content .= '</figure>';
-				$content .= '</div>';
+				$content .= $this->get_table();
 			}
 		}
 		// Restore original Post Data.
 		wp_reset_postdata();
+		return $content;
+	}
+
+	public function filter_the_content_plugin_details( $content ) {
+		if ( get_post_type() === $this->posttypes_names[ $this->posttype_name ] ) {
+			$content .= $this->get_table();
+		}
+		return $content;
+	}
+
+	private function get_table() {
+		$group    = 'plugin-data';
+		$content  = '';
+		$content .= '<div class="wp-block-group" style="margin: 2em 0">';
+		$content .= sprintf( '<h2 class="wp-block-heading"><a href="%s">%s</a></h2>', get_permalink(), get_the_title() );
+		$content .= '<figure class="wp-block-table is-style-stripes"><table class="has-fixed-layout">';
+		foreach ( $this->meta_boxes[ $this->posttypes_names[ $this->posttype_name ] ][ $group ]['fields'] as $field ) {
+			$value = get_post_meta( get_the_ID(), $this->get_post_meta_name( $field['name'], $group ), true );
+			if ( $value ) {
+				$content .= '<tr>';
+				$content .= sprintf( '<th class="has-text-align-left">%s</th>', esc_html( $field['label'] ) );
+				$content .= sprintf(
+					'<td class="%s">',
+					esc_attr( isset( $field['td_classes'] ) ? implode( ' ', $field['td_classes'] ) : '' )
+				);
+				switch ( $field['type'] ) {
+					case 'text':
+						$content .= $value;
+						break;
+					case 'date':
+						$content .= substr( $value, 0, 10 );
+						break;
+					case 'checkbox':
+						$content .= $value;
+						break;
+					case 'url':
+						$content .= sprintf(
+							'<a href="%1$s">%1$s</a>',
+							esc_url( $value )
+						);
+						break;
+				}
+				$content .= '</td>';
+				$content .= '</tr>';
+			}
+		}
+		$content .= '</table>';
+		$content .= '</figure>';
+		$content .= '</div>';
 		return $content;
 	}
 
@@ -367,5 +411,6 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 		}
 		return $response;
 	}
+
 }
 

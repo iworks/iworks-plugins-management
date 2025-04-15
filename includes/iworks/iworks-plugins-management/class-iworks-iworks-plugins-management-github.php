@@ -121,7 +121,7 @@ class iworks_iworks_plugins_management_github {
 		if ( empty( $repo_info ) ) {
 			return $result;
 		}
-		$details = get_plugin_data( dirname( $this->base ) . '/' . $this->plugin_file );
+		$details = get_plugin_data( dirname( $this->base ) . '/iworks-plugins-management.php' );
 		// Create array to hold the plugin data
 		$plugin = array(
 			'name'              => $details['Name'],
@@ -167,7 +167,7 @@ class iworks_iworks_plugins_management_github {
 		}
 
 		// If the basename is not in $checked, stop
-		if ( ! array_key_exists( $this->plugin_file, $checked ) ) {
+		if ( ! array_key_exists( 'iworks-plugins-management.php', $checked ) ) {
 			return $transient;
 		}
 
