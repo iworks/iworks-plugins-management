@@ -25,8 +25,9 @@ if ( class_exists( 'iworks_iworks_plugins_management_github' ) ) {
 
 class iworks_iworks_plugins_management_github {
 
-	private string $repository = 'iworks/iworks-plugins-management';
-	private string $basename   = 'iworks-plugins-management';
+	private string $repository  = 'iworks/iworks-plugins-management';
+	private string $basename    = 'iworks-plugins-management';
+	private string $plugin_file = 'iworks-plugins-management.php';
 	private $github_response;
 
 	public function __construct() {
@@ -45,7 +46,7 @@ class iworks_iworks_plugins_management_github {
 	 * @since 1.0.0
 	 */
 	public function action_init_load_plugin_textdomain() {
-		$dir = plugin_basename( dirname( dirname( dirname( __DIR__ ) ) ) ) . '/languages';
+		$dir = plugin_basename( dirname( __DIR__, 3 ) ) . '/languages';
 		load_plugin_textdomain( 'iworks-plugins-management', false, $dir );
 	}
 
@@ -247,4 +248,3 @@ class iworks_iworks_plugins_management_github {
 		return $result;
 	}
 }
-
