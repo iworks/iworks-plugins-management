@@ -248,6 +248,12 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 		$content  = '';
 		$content .= '<div class="wp-block-group" style="margin: 2em 0">';
 		$content .= sprintf( '<h2 class="wp-block-heading"><a href="%s">%s</a></h2>', get_permalink(), get_the_title() );
+		/**
+		 * excerpt
+		 */
+		if ( has_excerpt() ) {
+			$content .= '<div class="wp-block-post-excerpt">' . wpautop( wp_kses_post( get_the_excerpt() ) ) . '</div>';
+		}
 		$content .= '<figure class="wp-block-table is-style-stripes"><table class="has-fixed-layout">';
 		foreach ( $this->meta_boxes[ $this->posttypes_names[ $this->posttype_name ] ][ $group ]['fields'] as $field ) {
 			$value = get_post_meta( get_the_ID(), $this->get_post_meta_name( $field['name'], $group ), true );
@@ -266,11 +272,11 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 						$content .= substr( $value, 0, 10 );
 						break;
 					case 'checkbox':
-						$content .= $value;
+						$content .= 'yes' === $value ? esc_html__( 'Yes', 'iworks-plugins-management' ) : esc_html__( 'No', 'iworks-plugins-management' );
 						break;
 					case 'url':
 						$content .= sprintf(
-							'<a href="%1$s">%1$s</a>',
+							'<a href="%1$s" target="_blank">%1$s</a>',
 							esc_url( $value )
 						);
 						break;
@@ -383,7 +389,7 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 	 * @version 1.0.0
 	 * @return array
 	 */
-	private function get_github_info( $repository, $action = null ) : array {
+	private function get_github_info( $repository, $action = null ): array {
 		// Create the request URI
 		$request_uri = sprintf(
 			'https://api.github.com/repos/%s',
@@ -411,6 +417,4 @@ class iworks_iworks_plugins_management_posttype_plugin extends iworks_iworks_plu
 		}
 		return $response;
 	}
-
 }
-
